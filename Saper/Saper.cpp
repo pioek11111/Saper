@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+
 // zamiast niepoprawnych:
 
 #define MAX_LOADSTRING 100
