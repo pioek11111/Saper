@@ -156,30 +156,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Store instance handle in our global variable
    
    cmd = nCmdShow;
-   /*
-   fillRandomBombs(arr);
-   fillNeighbours(howManyMines);
-   RECT wr = { 0, 0, WIN_SIZE*x, WIN_SIZE * y };
-   AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, true);
-   data *dat = new data{ wr,nCmdShow };*/
-   //hWndP = CreateWindow(szWindowClass, szTitle, (WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS) /*& (~WS_THICKFRAME)*/,
-	//   CW_USEDEFAULT, 0, wr.right-wr.left, wr.bottom - wr.top, nullptr, nullptr, hInstance, (LPVOID)dat);
-   initGame();
 
-   //auto v = CreateEllipticRgn(2, 2, 10, 10);
-   //howWindow(hWnd, 0);
-   //h = CreateWindow(szWindowClass, szTitle, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER | WS_DISABLED),
-	  // /*CW_USEDEFAULT-*/0, 0, wr.right - wr.left, WIN_SIZE, hWnd, nullptr, hInstance, NULL);
-   ////EnableWindow(h, FALSE);
-   //for (int i = 0; i < x; i++) {
-	  // for (int j = 0; j < y; j++) {	   
-		 //  hWnd2[10*j+i] = CreateWindow(szWindowClass, nullptr, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER),
-			//   i * WIN_SIZE, (j+1) * WIN_SIZE, WIN_SIZE, WIN_SIZE, hWnd, NULL, hInstance, (LPVOID)arr[10 * j + i]);
-		 //  ShowWindow(hWnd2[10 * j + i], nCmdShow);
-		 //  //UpdateWindow(hWnd);
-	  // } 
-   //}
-   
+   initGame();   
    
    if (!hWndP)
    {
@@ -227,10 +205,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				0, 0, WIN_SIZE*x, WIN_SIZE, hWnd, nullptr, hInst, NULL);
 
 			ShowWindow(h, cmd);
-			//EnableWindow(h, FALSE);
-			for (int j = 0; j < y; j++)//for (int i = 0; i < x; i++)
+		
+			for (int j = 0; j < y; j++)
 			{
-				for (int i = 0; i < x; i++)//for (int j = 0; j < y; j++)
+				for (int i = 0; i < x; i++)
 				{
 					hWnd2[x * j + i] = CreateWindow(szWindowClass, nullptr, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER),
 						i * WIN_SIZE, (j + 1) * WIN_SIZE, WIN_SIZE, WIN_SIZE, hWnd, NULL, hInst, NULL);
@@ -240,30 +218,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					SetProp(hWnd2[x * j + i], L"isMine", &arr[x * j + i]);
 					SetProp(hWnd2[x * j + i], L"Neighbour", &howManyMines[x * j + i]);
 					SetProp(hWnd2[x * j + i], L"idx", &indexArr[x * j + i]);
-
-					//InvalidateRect(hWnd2[10 * j + i], NULL, TRUE);
-					/*hWnd2[y * i + j] = CreateWindow(szWindowClass, nullptr, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER),
-						i * WIN_SIZE, (j + 1) * WIN_SIZE, WIN_SIZE, WIN_SIZE, hWnd, NULL, hInst, NULL);
-					indexArr[y * i + j] = y * i + j;
-					color[y * i + j] = 0;
-					SetProp(hWnd2[y * i + j], L"color", &color[y * i + j]);
-					SetProp(hWnd2[y * i + j], L"isMine", &arr[y * i + j]);
-					SetProp(hWnd2[y * i + j], L"Neighbour", &howManyMines[y * i + j]);
-					SetProp(hWnd2[y * i + j], L"idx", &indexArr[y * i + j]);*/
 				}
 			}
 		}
 
 		break;
 	case WM_RBUTTONDOWN:
-		/*CloseWindow(hWnd);
-		DeleteObject(hWnd);*/
-		//{
 		if(gameTime == 0) SetTimer(hWnd, 7, 1000, NULL);
-		if (hWnd != h && hWnd != hWndP)   // 0 - gray   1 - mine   2 - neighbpur   3 - flag  4-white
+		if (hWnd != h && hWnd != hWndP)   
 		{
-			int* isMine = (int*)GetProp(hWnd, L"isMine"); //
-			int* color = (int*)GetProp(hWnd, L"color"); //
+			int* isMine = (int*)GetProp(hWnd, L"isMine"); 
+			int* color = (int*)GetProp(hWnd, L"color"); 
 			if (*color == 0) 
 			{ 
 				int *v1=new int; 
@@ -273,7 +238,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				mines--;
 				if(mineAndFlag == BOMB_COUNTER) MessageBox(hWndP, L"SUCCESS!!", L"Game", MB_SYSTEMMODAL);
 				UpdateWindow(h);
-			}// from gray to flag
+			}
 			if (*color == 3)
 			{
 				int *v = new int;
@@ -282,8 +247,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (*isMine == 1) mineAndFlag--;
 				mines++;
 				UpdateWindow(h);
-			}// from flag to gray
-				//flagPaintFlag = 1;
+			}
 				InvalidateRect(hWnd, NULL, TRUE);
 				UpdateWindow(hWnd);
 			
@@ -384,13 +348,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			rc2.left = 0.5*(rc2.right - rc2.left);
 			DrawTextEx(hdc, (LPWSTR)time, 4, &rc2, DT_CENTER | DT_SINGLELINE | DT_VCENTER, NULL);
 		}
-		//if (timeFlag == 1)
-		//{
-		//	timeFlag = 0;
-		//	RECT rc;
-		//	GetClientRect(h, &rc);
-		//	//DrawText(hdc, L"7", (int)_tcslen(L"7"), &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-		//}
 		if (hWnd != h && hWnd != hWndP) // male okienka
 		{
 			RECT rc;
@@ -490,33 +447,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 		}
-		/*if(flagPaintFlag == 1 && hWnd != h && hWnd != hWndP)
-		{
-			auto b = GetProp(hWnd, (LPCTSTR)"isRed");
-			if (b == (HANDLE)1) // jest flaga
-			{
-				RECT rc = { 0,0,WIN_SIZE ,WIN_SIZE };
-				HBRUSH brushW = CreateSolidBrush(RGB(255, 255, 255));
-				FillRect(hdc, &rc, brushW);
-				//SetBkMode(hdc, TRANSPARENT);
-				SetProp(hWnd, (LPCTSTR)"isRed", (HANDLE)0);
-			}
-			else
-			{
-				auto bitmap = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_BITMAP2));
-				HDC hdcNowy = CreateCompatibleDC(hdc);
-				HBITMAP hbmOld = (HBITMAP)SelectObject(hdcNowy, bitmap);
-				BitBlt(hdc, 25, 25, 48, 48, hdcNowy, 0, 0, SRCCOPY);
-				StretchBlt(hdc, 0, 0, 25, 25, hdcNowy, 0, 0, 48, 48, SRCCOPY);
-				SelectObject(hdcNowy, hbmOld);
-				DeleteObject(bitmap);
-				DeleteDC(hdcNowy);
-				flagPaintFlag = 0;
-				//SetBkMode(hdc, TRANSPARENT);
-				SetProp(hWnd, (LPCTSTR)"isRed", (HANDLE)1);
-			}
-		}*/
-		///
+		
 		EndPaint(hWnd, &ps);
 		UpdateWindow(hWnd);
 	}
@@ -613,24 +544,16 @@ BOOL CALLBACK DialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lPara
 			GetWindowText(hEditBox, (LPWSTR)h1, 4);
 			GetWindowText(wEditBox, (LPWSTR)w, 4);
 			GetWindowText(mEditBox, (LPWSTR)m, 4);
-			/*y = ((int)h[0] - 48)*10+ (int)h[2] - 48;
-			x = ((int)w[0] - 48) * 10 + (int)w[2] - 48;*/
 			mines = ((int)m[0] - 48) * 10 + (int)m[2] - 48;
 			x = ((int)w[0] - 48) * 10 + (int)w[2] - 48;
 			y = ((int)h1[0] - 48) * 10 + (int)h1[2] - 48;
 			//KillTimer(h,7);
 			RECT wr = { 0, 0, WIN_SIZE*x, WIN_SIZE * (y + 1) };  //zmiana
-			AdjustWindowRect(&wr, /*WS_OVERLAPPEDWINDOW*/(WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS) & (~WS_THICKFRAME) & (~WS_MAXIMIZEBOX), true);
+			AdjustWindowRect(&wr, (WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS) & (~WS_THICKFRAME) & (~WS_MAXIMIZEBOX), true);
 			data *dat = new data{ wr,cmd };
 			mineCounter = BOMB_COUNTER;
-			/*h = CreateWindow(szWindowClass, szTitle, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER),
-				0, 0, WIN_SIZE*x, WIN_SIZE, hWndP, nullptr, hInst, NULL);*/
-
-			//Parent = 1;
-			//hWndP = CreateWindow(szWindowClass, szTitle, (WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_CLIPSIBLINGS) & (~WS_THICKFRAME) & (~WS_MAXIMIZEBOX),
-				//CW_USEDEFAULT, 0, wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, hInst, (LPVOID)dat);
+			
 			MoveWindow(hWndP, 0, 0, wr.right - wr.left, wr.bottom - wr.top, true);
-			//UpdateWindow(hWndP);
 			newGame();
 			
 			EndDialog(hwndDlg, LOWORD(wParam));
@@ -716,12 +639,11 @@ void newGame()
 	gameTime = 0;
 	fillRandomBombs();
 	fillNeighbours();
-	/*h = CreateWindow(szWindowClass, szTitle, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER),
-		0, 0, WIN_SIZE*x, WIN_SIZE, hWndP, nullptr, hInst, NULL);*/
+	
 
-	for (int j = 0; j < y; j++)//for (int i = 0; i < x; i++)
+	for (int j = 0; j < y; j++)
 	{
-		for (int i = 0; i < x; i++)//for (int j = 0; j < y; j++)
+		for (int i = 0; i < x; i++)
 		{
 			hWnd2[x * j + i] = CreateWindow(szWindowClass, nullptr, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER),
 				i * WIN_SIZE, (j + 1) * WIN_SIZE, WIN_SIZE, WIN_SIZE, hWndP, NULL, hInst, NULL);
@@ -730,16 +652,7 @@ void newGame()
 			SetProp(hWnd2[x * j + i], L"color", &color[x * j + i]);
 			SetProp(hWnd2[x * j + i], L"isMine", &arr[x * j + i]);
 			SetProp(hWnd2[x * j + i], L"Neighbour", &howManyMines[x * j + i]);
-			SetProp(hWnd2[x * j + i], L"idx", &indexArr[x * j + i]);
-			//InvalidateRect(hWnd2[10 * j + i], NULL, TRUE);
-			/*hWnd2[y * i + j] = CreateWindow(szWindowClass, nullptr, (~WS_THICKFRAME) & (WS_VISIBLE | WS_CHILD | WS_BORDER),
-			i * WIN_SIZE, (j + 1) * WIN_SIZE, WIN_SIZE, WIN_SIZE, hWnd, NULL, hInst, NULL);
-			indexArr[y * i + j] = y * i + j;
-			color[y * i + j] = 0;
-			SetProp(hWnd2[y * i + j], L"color", &color[y * i + j]);
-			SetProp(hWnd2[y * i + j], L"isMine", &arr[y * i + j]);
-			SetProp(hWnd2[y * i + j], L"Neighbour", &howManyMines[y * i + j]);
-			SetProp(hWnd2[y * i + j], L"idx", &indexArr[y * i + j]);*/
+			SetProp(hWnd2[x * j + i], L"idx", &indexArr[x * j + i]);			
 		}
 	}
 	
